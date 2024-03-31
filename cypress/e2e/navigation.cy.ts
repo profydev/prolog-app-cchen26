@@ -42,6 +42,21 @@ describe("Sidebar Navigation", () => {
       // check that text is not rendered
       cy.get("nav").contains("Issues").should("not.exist");
     });
+
+    it("should open the user's mail app with the correct mailto link when clicking the Support button", function () {
+      cy.window().then((win) => {
+        cy.stub(win, "open").as("windowOpen");
+      });
+
+      // Click the Support button
+      cy.get("nav").contains("Support").click();
+
+      cy.get("@windowOpen").should(
+        "be.always.calledWith",
+        "mailto:support@prolog-app.com?subject=Support Request:",
+        "_blank",
+      );
+    });
   });
 
   context("mobile resolution", () => {
@@ -104,7 +119,7 @@ describe("Sidebar Navigation", () => {
       cy.get("nav").contains("Support").click();
 
       cy.get("@windowOpen").should(
-        "be.calledWith",
+        "be.always.calledWith",
         "mailto:support@prolog-app.com?subject=Support Request:",
         "_blank",
       );
