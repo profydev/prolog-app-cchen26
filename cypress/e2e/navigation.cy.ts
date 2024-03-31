@@ -91,5 +91,23 @@ describe("Sidebar Navigation", () => {
       cy.wait(500);
       isNotInViewport("nav");
     });
+
+    it("should open the user's mail app with the correct mailto link when clicking the Support button", function () {
+      cy.window().then((win) => {
+        cy.stub(win, "open").as("windowOpen");
+      });
+
+      // Open the sidebar navigation in mobile view
+      cy.get("img[alt='open menu']").click();
+
+      // Now click the Support button
+      cy.get("nav").contains("Support").click();
+
+      cy.get("@windowOpen").should(
+        "be.calledWith",
+        "mailto:support@prolog-app.com?subject=Support Request:",
+        "_blank",
+      );
+    });
   });
 });
