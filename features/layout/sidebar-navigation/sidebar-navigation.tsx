@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Routes } from "@config/routes";
 import classNames from "classnames";
 import { NavigationContext } from "./navigation-context";
@@ -7,6 +7,8 @@ import { MenuItemButton } from "./menu-item-button";
 import { MenuItemLink } from "./menu-item-link";
 import { Button } from "@features/ui";
 import styles from "./sidebar-navigation.module.scss";
+import Image from "next/image";
+import { debounce } from "lodash";
 
 const menuItems = [
   { text: "Projects", iconSrc: "/icons/projects.svg", href: Routes.projects },
@@ -20,6 +22,22 @@ export function SidebarNavigation() {
   const router = useRouter();
   const { isSidebarCollapsed, toggleSidebar } = useContext(NavigationContext);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      const isMobileView = window.matchMedia("(max-width: 64em)").matches;
+      setIsMobileView(isMobileView);
+    }, 100); // Debounce with a 100ms delay
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => {
+      handleResize.cancel(); // Cancel any pending executions
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const openSupportMail = () => {
     window.open(
@@ -42,24 +60,36 @@ export function SidebarNavigation() {
         )}
       >
         <header className={styles.header}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={
-              isSidebarCollapsed
-                ? "/icons/logo-small.svg"
-                : "/icons/logo-large.svg"
-            }
-            alt="logo"
-            className={styles.logo}
-          />
+          {isMobileView ? (
+            <Image
+              src="/icons/logo-large.svg"
+              alt="logo"
+              width={118}
+              height={33}
+              className={styles.logo}
+            />
+          ) : (
+            <Image
+              src={
+                isSidebarCollapsed
+                  ? "/icons/logo-small.svg"
+                  : "/icons/logo-large.svg"
+              }
+              alt="logo"
+              width={isSidebarCollapsed ? 23 : 118}
+              height={33}
+              className={styles.logo}
+            />
+          )}
           <Button
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             className={styles.menuButton}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={isMobileMenuOpen ? "/icons/close.svg" : "/icons/menu.svg"}
               alt={isMobileMenuOpen ? "close menu" : "open menu"}
+              width={isMobileMenuOpen ? 23 : 118} // Assuming similar dimensions for menu icons for simplicity
+              height={33}
               className={styles.menuIcon}
             />
           </Button>
