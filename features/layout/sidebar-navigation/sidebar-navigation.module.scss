@@ -143,3 +143,21 @@
 .collapseIconRotated {
   transform: rotate(180deg);
 }
+
+.logo-small {
+  display: block; // Default to small logo
+}
+
+.logo-large {
+  display: none; // Hide large logo by default
+}
+
+@media (max-width: breakpoint.$desktop) {
+  .logo-small {
+    display: none; // Hide small logo on mobile
+  }
+
+  .logo-large {
+    display: block; // Show large logo on mobile
+  }
+}
