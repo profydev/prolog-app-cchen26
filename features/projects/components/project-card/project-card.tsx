@@ -50,7 +50,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <div className={styles.issuesNumber}>{numEvents24h}</div>
           </div>
           <div className={styles.status}>
-            <Badge color={statusColors[status]}>{capitalize(status)}</Badge>
+            <Badge color={statusColors[status]}>
+              {status === ProjectStatus.critical
+                ? "Critical"
+                : status === ProjectStatus.stable
+                  ? "Stable"
+                  : capitalize(status)}
+            </Badge>
           </div>
         </div>
       </div>
