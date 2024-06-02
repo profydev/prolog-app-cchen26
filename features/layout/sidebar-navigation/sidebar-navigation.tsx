@@ -18,7 +18,11 @@ const menuItems = [
   { text: "Settings", iconSrc: "/icons/settings.svg", href: Routes.settings },
 ];
 
-export function SidebarNavigation() {
+type SidebarNavigationProps = {
+  className?: string;
+};
+
+export function SidebarNavigation({ className }: SidebarNavigationProps) {
   const router = useRouter();
   const { isSidebarCollapsed, toggleSidebar } = useContext(NavigationContext);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -51,6 +55,7 @@ export function SidebarNavigation() {
       className={classNames(
         styles.container,
         isSidebarCollapsed && styles.isCollapsed,
+        className,
       )}
     >
       <div
