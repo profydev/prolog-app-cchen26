@@ -62,6 +62,7 @@ export function SidebarNavigation({ className }: SidebarNavigationProps) {
         className={classNames(
           styles.fixedContainer,
           isSidebarCollapsed && styles.isCollapsed,
+          className,
         )}
       >
         <header className={styles.header}>
