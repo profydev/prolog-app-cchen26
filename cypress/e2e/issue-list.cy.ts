@@ -35,6 +35,26 @@ describe("Issue List", () => {
       cy.viewport(1025, 900);
     });
 
+    it("renders a loading spinner", () => {
+      // setup request mock wait some time before continuing
+      cy.intercept("GET", "https://prolog-api.profy.dev/issue", {
+        delayMs: 100,
+        fixture: "issues-page-1.json",
+      }).as("getIssuesPage1");
+
+      // during wait, open issue page
+      cy.visit(`http://localhost:3000/dashboard/issues`);
+
+      // fetch spinner
+      cy.get('[data-cy="loading"]').should("be.visible");
+
+      // wait for request to resolve
+      cy.wait("@getIssuesPage1");
+
+      // request is resolved, spinner should be removed.
+      cy.get('[data-cy="loading"]').should("not.exist");
+    });
+
     it("renders the issues", () => {
       cy.get("main")
         .find("tbody")
