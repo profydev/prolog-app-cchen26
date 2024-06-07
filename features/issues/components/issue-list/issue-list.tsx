@@ -19,7 +19,7 @@ export function IssueList() {
   const projects = useGetProjects();
 
   if (projects.isLoading || issuesPage.isLoading) {
-    return <Loading data-cy="issue-list-loading" />;
+    return <Loading />;
   }
 
   if (projects.isError) {

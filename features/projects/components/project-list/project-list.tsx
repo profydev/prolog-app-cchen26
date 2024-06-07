@@ -8,7 +8,7 @@ export function ProjectList() {
   const { data, isLoading, isError, error } = useGetProjects();
 
   if (isLoading) {
-    return <Loading data-cy="project-list-loading" />;
+    return <Loading />;
   }
 
   if (isError) {
